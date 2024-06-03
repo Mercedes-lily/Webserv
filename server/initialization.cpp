@@ -70,8 +70,8 @@ int bindNlisten(serverConfig &serv)
 int pollfdInitialization(serverConfig &serv, struct pollfd *pollfds)
 {
 	pollfds->fd = serv.getFd();
-	//pollfds->events = POLLIN;
-	//pollfds->revents = 0;
+	pollfds->events = POLLIN;
+	pollfds->revents = 0;
 	return(0);
 }
 
