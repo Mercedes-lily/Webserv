@@ -83,21 +83,20 @@ void Request::createMap(string &RequestStr, std::map<string, string> &RequestMap
 	if (query == 0)
 	{
 		i_end = RequestStr.find_first_of(" \r\n", 0);
-		i_end = RequestStr.find_first_of(" \r\n", 0);
-	if(RequestStr[i_end] == '\r' || RequestStr[i_end] == '\n')
-	{
-		RequestMap["Protocol"]= RequestStr.substr(0, i_end);
-		RequestStr.erase(0, i_end + 1);
-		addMethodeInMap("Host: ", RequestStr, RequestMap);
-		addMethodeInMap("Connection: ", RequestStr, RequestMap);
-		addMethodeInMap("Content-Type: ", RequestStr, RequestMap);
-		addMethodeInMap("Content-Length: ", RequestStr, RequestMap);
-	}
-	else
-	{
-		//bad input
-		return;
-	}
+		if(RequestStr[i_end] == '\r' || RequestStr[i_end] == '\n')
+		{
+			RequestMap["Protocol"]= RequestStr.substr(0, i_end);
+			RequestStr.erase(0, i_end + 1);
+			addMethodeInMap("Host: ", RequestStr, RequestMap);
+			addMethodeInMap("Connection: ", RequestStr, RequestMap);
+			addMethodeInMap("Content-Type: ", RequestStr, RequestMap);
+			addMethodeInMap("Content-Length: ", RequestStr, RequestMap);
+		}
+		else
+		{
+			//bad input
+			return;
+		}
 	}
 	else if( query == 1)
 	{
@@ -129,6 +128,12 @@ void Request::createMap(string &RequestStr, std::map<string, string> &RequestMap
 			}
 		}
 	}
+	//add body in request map for post
+	i_end = RequestStr.find_first_of("\r", 0);
+	RequestStr.erase(0, i_end + 2);
+	i_end = RequestStr.find_first_of("\r", 0);
+	RequestMap["Body"] = RequestStr.substr(0, i_end);
+	std::cout << "Request Body: " << RequestMap["Body"] << std::endl;
 	std::cout << iscgi(RequestMap["File"], ".py") << std::endl;
 	if(iscgi(RequestMap["File"], ".py") == 1 )
 	{
@@ -170,19 +175,18 @@ void	Request::RequestExecution(serverConfig &serv, Response &response, std::stri
 		std::cout << "delete" << std::endl;
 		if(deleteMethode(RequestMap, serv) != 0)
 		{
-			//TODO gérer les erreurs de POST
+			//TODO gérer les erreurs de DELETE
 			std::cout << "PROBLEM WITH DELETE";
 		}
 	}
 	else if (RequestMap["Method"] == "POST")
 	{
 			std::cout << "post" << std::endl;
-			/*std::map<string, string> postMap;
-			if(postMethode(this->_RequestStr, response.getResponse_data(), postMap, serv, response) != 0)
+			if(postMethode(RequestMap, serv) != 0)
 			{
 				//TODO gérer les erreurs de POST
 				std::cout << "PROBLEM WITH POST";
-			}*/
+			}
 	}
 	else
 	{

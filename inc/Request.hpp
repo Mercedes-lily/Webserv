@@ -29,4 +29,5 @@ public:
 void addMethodeInMap(string str, string &RequestStr, std::map<string,string> &RequestMap);
 int getMethode(string &response_data, std::map<string, string> &RequestMap, serverConfig &serv, Response &response, string text);
 int deleteMethode(std::map<string, string> &RequestMap, serverConfig &serv);
+int postMethode(std::map<string, string> &RequestMap, serverConfig &serv);
 #endif
