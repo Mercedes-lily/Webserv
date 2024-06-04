@@ -152,7 +152,9 @@ int	main(int argc, char **argv)
 									continue;
 								//TODO extract information from buffer and add it to a struct.
 								//Réalisation de la requête//
-								request.RequestExecution(serv, response, text);
+								std::map<string, string> RequestMap;
+								request.createMap(request.getRequestStr(), RequestMap, serv);
+								request.RequestExecution(serv, response, text, RequestMap);
 								//Creation de la réponse//
 								close(serv.getSocket_client());
 								std::cout << "fin de la requ[e]te" << std::endl;

@@ -1,4 +1,5 @@
 //test.py
+#include "serverConfig.hpp"
 
 #include <string>
 #include <unistd.h>
@@ -29,30 +30,27 @@ int iscgi(std::string file, std::string extension)
 	size_t pos;
 	if ((pos =file.rfind(extension, 100)) != std::string::npos)
 	{
-		if(file.compare(pos, extension.size() + 1, extension))
-		{
-			//dans la map ajouter path pour l'executable /usr/bin/python3
+		if(file.compare(pos, extension.size() + 1, extension) == 0)
 			return(1);
-		}
 		return(0);
 	}
 	return(0);
 }
 
 //verifier dans la map si cest py php ou sh
-int executecgi(std::string method, std::string file)
+int executecgi(std::map<string, string> &RequestMap)
 {
-
 	int pid;
 	int status;
-	(void) method;
 	int fd;
 
-	//std::string cgipath = "/usr/bin/python3";
-	//std::string cgipath = "/usr/bin/php";
-	std::string cgipath = "/bin/bash";
-	std::string filepath = "/Users/vst-pier/Desktop/webserv2.0/server/script/" + file;
-	std::string name = "Sebastien";
+	std::string name;
+	std::string cgipath = RequestMap["CGI_Path"];
+	std::string filepath = "/Users/vst-pier/Desktop/webserv2.0/server/script/" + RequestMap["File"];  //TODO mettre le path de serv
+	if (RequestMap.find("Name") != RequestMap.end())
+		name = RequestMap["Name"];
+	else
+		name = "Sebastien";
 	char *env[4];
 	env[0] = new char[cgipath.length() + 1];
 	std::strcpy(env[0], cgipath.c_str());
@@ -74,37 +72,35 @@ int executecgi(std::string method, std::string file)
 		exit(500);
 	}
 	waitpid(pid, &status, 0);
-	std::string readed;
-	std::fstream htmlTemplate("template.html");
-	if(htmlTemplate.is_open() == 0)
-		return (500);
-	std::ofstream cgi_html("cgi_html");
-	std::fstream ToReplaceFile("temp.txt");
-	std::string ToReplaceString;
-	getline(ToReplaceFile, ToReplaceString);
-	while(getline(htmlTemplate, readed))
+	if (RequestMap["Method"] == "GET")
 	{
-		cgi_html << find_replace(readed, "(ToReplace)", ToReplaceString);
-		if(htmlTemplate.peek() == std::ifstream::traits_type::eof())
-			break ;
-		cgi_html << std::endl;
+		std::string readed;
+		std::fstream htmlTemplate("server/template.html");
+		if(htmlTemplate.is_open() == 0)
+		{
+			std::cout << "template not open" << std::endl;
+			return (500);
+		}
+		std::ofstream cgi_html("server/cgi.html");
+		std::fstream ToReplaceFile("temp.txt");
+		std::string ToReplaceString;
+		getline(ToReplaceFile, ToReplaceString);
+		while(getline(htmlTemplate, readed))
+		{
+			cgi_html << find_replace(readed, "(ToReplace)", ToReplaceString);
+			if(htmlTemplate.peek() == std::ifstream::traits_type::eof())
+				break ;
+			cgi_html << std::endl;
 
+		}
+		RequestMap.erase ("File");  
+		RequestMap["File"] = "cgi.html";
+		RequestMap.erase ("Extension");  
+		RequestMap["Extension"] = "text/html";
+		htmlTemplate.close();
+		ToReplaceFile.close();
+		cgi_html.close();
 	}
-	htmlTemplate.close();
-	ToReplaceFile.close();
-	cgi_html.close();
 	return(200);
 
-}
-
-//on a déjà vérifié si le fichier existe et est lisible.
-int main(int argc, char** argv)
-{
-	if (argc == 1 || argc == 2)
-		return(1);
-	std::string method(argv[1]);
-	std::string file(argv[2]);
-	//std::string name;
-	executecgi(method, file);
-	return(0);
 }

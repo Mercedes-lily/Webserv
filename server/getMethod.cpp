@@ -1,80 +1,9 @@
 #include "../inc/Request.hpp"
 #include "../inc/initialization.hpp"
 
-
-void createGetMap(string &RequestStr, std::map<string, string> &RequestMap, serverConfig &serv)
-{
-	size_t i_end = 0;
-	int query = 0;
-	RequestMap["Methode"]= "GET";
-	RequestStr.erase(0, 4);
-	i_end = RequestStr.find_first_of(" ?", 0);
-	if (RequestStr[i_end] == '?')
-		query = 1;
-	RequestMap["File"]= RequestStr.substr(0, i_end);
-	if(RequestMap["File"][0] != '/')
-	{
-	//error page internal server problem
-	return;
-	}
-	serv.setFile(RequestMap["File"]);
-	RequestStr.erase(0, i_end + 1);
-	if (query == 0)
-	{
-		i_end = RequestStr.find_first_of(" \r\n", 0);
-		i_end = RequestStr.find_first_of(" \r\n", 0);
-	if(RequestStr[i_end] == '\r' || RequestStr[i_end] == '\n')
-	{
-			RequestMap["Protocol"]= RequestStr.substr(0, i_end);
-	RequestStr.erase(0, i_end + 1);
-	addMethodeInMap("User-Agent: ", RequestStr, RequestMap);
-	addMethodeInMap("Host: ", RequestStr, RequestMap);
-	addMethodeInMap("Accept-Language: ", RequestStr, RequestMap);
-	addMethodeInMap("Connection: ", RequestStr, RequestMap);
-	}
-	else
-	{
-		//bad input
-		return;
-	}
-	}
-	else if( query == 1)
-	{
-		while(1)
-		{
-			i_end = RequestStr.find_first_of("& \n\r", 0);
-			if (RequestStr[i_end] == '&' || RequestStr[i_end] == ' ')
-			{
-				size_t i_middle = RequestStr.find_first_of("=", 0);
-				std::string index = RequestStr.substr(0, i_middle);
-				std::string value = RequestStr.substr(i_middle + 1, i_end - i_middle -1);
-				RequestMap[index]= value;
-				RequestStr.erase(0, i_end + 1);
-			}
-			else if(RequestStr[i_end] == '\r' || RequestStr[i_end] == '\n')
-			{
-				RequestMap["Protocol"]= RequestStr.substr(0, i_end);
-				RequestStr.erase(0, i_end + 1);
-				addMethodeInMap("User-Agent: ", RequestStr, RequestMap);
-				addMethodeInMap("Host: ", RequestStr, RequestMap);
-				addMethodeInMap("Accept-Language: ", RequestStr, RequestMap);
-				addMethodeInMap("Connection: ", RequestStr, RequestMap);
-				return;
-			}
-			else
-			{
-				//error bad input
-				return;
-			}
-		}
-	}
-}
-
-int getMethode(string &RequestStr, string &response_data, std::map<string, string> &RequestMap, serverConfig &serv, Response &response, std::string text)
+int getMethode(string &response_data, std::map<string, string> &RequestMap, serverConfig &serv, Response &response, std::string text)
 {
 	struct stat sb;
-	//create the map
-	createGetMap(RequestStr, RequestMap, serv);
 	//print map
 	for(std::map<string, string>::iterator b = RequestMap.begin(); b != RequestMap.end(); b++)
 		cout << "->" << b->second << "<-" << endl;

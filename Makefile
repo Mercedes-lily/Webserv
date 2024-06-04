@@ -15,7 +15,7 @@ USER = $(shell whoami)
 
 INCDIR = inc
 SRCDIR = server
-SRC = main.cpp Request.cpp Response.cpp initialization.cpp utils.cpp serverConfig.cpp location.cpp configFile.cpp configParser.cpp getMethod.cpp postMethod.cpp deleteMethod.cpp parsingMethodUtils.cpp
+SRC = main.cpp Request.cpp Response.cpp initialization.cpp utils.cpp serverConfig.cpp location.cpp configFile.cpp configParser.cpp getMethod.cpp postMethod.cpp deleteMethod.cpp parsingMethodUtils.cpp cgi.cpp
 		
 VPATH = ${SRCDIR} ${SRCDIR2}
 

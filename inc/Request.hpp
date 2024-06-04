@@ -21,12 +21,12 @@ public:
 	~Request(void);
 	Request& operator=(Request const& rhs);
 	int	RequestReception(serverConfig &serv, pollfd *pollfds, int fd);
-	void	RequestExecution(serverConfig &serv, Response &response, string test);
+	void	RequestExecution(serverConfig &serv, Response &response, string text, std::map<string, string> &RequestMap);
+	string &getRequestStr();
+	void createMap(string &RequestStr, std::map<string, string> &RequestMap, serverConfig &serv);
 };
 
 void addMethodeInMap(string str, string &RequestStr, std::map<string,string> &RequestMap);
-void createDeleteMap(string &RequestStr, std::map<string, string> &RequestMap);
-void createGetMap(string &RequestStr, std::map<string, string> &RequestMap, serverConfig &serv);
-int getMethode(string &RequestStr, string &response_data, std::map<string, string> &RequestMap, serverConfig &serv, Response &response, string text);
-int deleteMethode(string &RequestStr, string &response_data, std::map<string, string> &RequestMap, serverConfig &serv, Response &response);
+int getMethode(string &response_data, std::map<string, string> &RequestMap, serverConfig &serv, Response &response, string text);
+int deleteMethode(std::map<string, string> &RequestMap, serverConfig &serv);
 #endif
