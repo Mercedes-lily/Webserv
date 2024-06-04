@@ -26,7 +26,7 @@ int	main()
 		close(client_fd);
 		return (1);
 	}
-	send(client_fd, "GET /HelloWorld.py HTTP/1.1\nUser-Agent: custom-client\nHost : localhost\nAccept-Language: fr-CA, fr;q=0.9, en;q=0.8, de;q=0.7, *;q=0.5\nConnection: keep-alive\r\n\r\n", 162, 0);
+	send(client_fd, "DELETE /temp.txt HTTP/1.1\nUser-Agent: custom-client\nHost : localhost\nAccept-Language: fr-CA, fr;q=0.9, en;q=0.8, de;q=0.7, *;q=0.5\nConnection: keep-alive\r\n\r\n", 162, 0);
 	char buffer[10000] = {0};
 	printf("hello message sent\n");
 	//
