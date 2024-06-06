@@ -67,15 +67,15 @@ int bindNlisten(serverConfig &serv)
 	return(0);
 }
 
-int pollfdInitialization(serverConfig &serv, struct pollfd *pollfds)
-{
-	pollfds->fd = serv.getFd();
-	pollfds->events = POLLIN;
-	pollfds->revents = 0;
-	return(0);
-}
+// int pollfdInitialization(serverConfig &serv, struct pollfd *pollfds)
+// {
+// 	pollfds->fd = serv.getFd();
+// 	pollfds->events = POLLIN;
+// 	pollfds->revents = 0;
+// 	return(0);
+// }
 
-int initialization(serverConfig &serv, int reuse, struct pollfd *pollfds)
+int initialization(serverConfig &serv, int reuse)
 {
 	int code = 0;
 
@@ -87,9 +87,9 @@ int initialization(serverConfig &serv, int reuse, struct pollfd *pollfds)
 	if(code != 0)
 		return(code);
 	//Bind and listen
-	code = pollfdInitialization(serv, pollfds);
-	if(code != 0)
-		return(code);
+	// code = pollfdInitialization(serv, pollfds);
+	// if(code != 0)
+	// 	return(code);
 	//Pollfd initialization
 	code = bindNlisten(serv);
 	return(code);

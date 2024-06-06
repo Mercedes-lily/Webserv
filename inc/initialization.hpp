@@ -17,7 +17,7 @@ int closefile(const string &str, int file, int file2);
 int	nblock_connection(int fd, int reuse, int type);
 int serverInitialization(serverConfig &serv);
 int bindNlisten(serverConfig &serv);
-int pollfdInitialization(serverConfig &serv, struct pollfd *pollfds);
-int initialization(serverConfig &serv, int reuse, struct pollfd *pollfds);
+int pollfdInitialization(serverConfig &serv);
+int initialization(serverConfig &serv, int reuse);
 
 # endif
