@@ -21,13 +21,12 @@
         <img class="img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Ronald_McDonald_cheers_during_the_Special_Olympics_opening_ceremony_at_Kadena_Air_Base_in_Okinawa%2C_Japan%2C_Nov_111105-F-ZT401-232_%28cropped%29.jpg/220px-Ronald_McDonald_cheers_during_the_Special_Olympics_opening_ceremony_at_Kadena_Air_Base_in_Okinawa%2C_Japan%2C_Nov_111105-F-ZT401-232_%28cropped%29.jpg" alt="Random Image">
         <h1>Hello World From AmadoIII!</h1>
         <p>This is the default html file.</p>
-        <form action="/upload">
+        <form action="/upload" method="post" enctype="multipart/form-data">
             <div style="width: 70%; margin: auto; text-align: center; background-color: yellow;">
-                <label for="uname">File name:</label>
-                <input type="text" id="uname" name="name">
-                <input type="file" value="Upload">
             </div>
             <div>
+                <label for="uname">File name:</label>
+                <input type="file" name="file">
                 <input type="submit" value="Upload">
                 <button type="button">Delete</button>
             </div>

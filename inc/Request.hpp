@@ -24,6 +24,7 @@ public:
 	void	RequestExecution(serverConfig &serv, Response &response, string text, std::map<string, string> &RequestMap);
 	string &getRequestStr();
 	void createMap(string &RequestStr, std::map<string, string> &RequestMap, serverConfig &serv);
+	void extractRequestVariables(std::map<std::string, std::string>&RequestMap);
 };
 
 void addMethodeInMap(string str, string &RequestStr, std::map<string,string> &RequestMap);

@@ -50,6 +50,29 @@ int Request::RequestReception(serverConfig &serv, pollfd *pollfds, int fd)
 	return (0);
 }
 
+void Request::extractRequestVariables(std::map<std::string, std::string>&RequestMap)
+{
+	size_t i;
+	string delim;
+
+	// i = RequestMap["Body"].find("Content-Disposition: ") + 21;
+	delim = RequestMap["Body"].substr(0, RequestMap["Body"].find_first_of("\n"));
+	addMethodeInMap("Content-Disposition: ", RequestMap["Body"], RequestMap);
+	addMethodeInMap("name", RequestMap["Body"], RequestMap);
+	addMethodeInMap("filename", RequestMap["Body"], RequestMap);
+	addMethodeInMap("Content-Type: ", RequestMap["Body"], RequestMap);
+	addMethodeInMap(" ", RequestMap["Body"], RequestMap);
+	i = RequestMap["Body"].find("Content-Type: ");
+	RequestMap["Body"].erase(0, i);
+	cout << "CHecking Body after first erase: " << RequestMap["Body"] << endl << endl;
+	i = RequestMap["Body"].find_first_of("\n") + 1;
+	RequestMap["Body"].erase(0, i + 1);
+	cout << "CHecking Body before extracting fileData: " << RequestMap["Body"] << endl;
+	RequestMap["File-Data"].substr(0, RequestMap["Body"].size() - delim.size());
+	cout << "FILEDATA: " << RequestMap["File-Data"] << endl;
+	cout << endl;
+}
+
 void Request::createMap(string &RequestStr, std::map<string, string> &RequestMap, serverConfig &serv)
 {
 	size_t i_end = 0;
@@ -129,10 +152,10 @@ void Request::createMap(string &RequestStr, std::map<string, string> &RequestMap
 		}
 	}
 	//add body in request map for post
-	i_end = RequestStr.find_first_of("\r", 0);
+	i_end = RequestStr.find("\r\n\r\n", 0);
 	RequestStr.erase(0, i_end + 2);
-	i_end = RequestStr.find_first_of("\r", 0);
 	RequestMap["Body"] = RequestStr.substr(0, i_end);
+	// extractRequestVariables(RequestMap);
 	std::cout << "Request Body: " << RequestMap["Body"] << std::endl;
 	std::cout << iscgi(RequestMap["File"], ".py") << std::endl;
 	if(iscgi(RequestMap["File"], ".py") == 1 )

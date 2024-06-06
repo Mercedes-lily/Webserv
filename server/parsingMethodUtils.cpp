@@ -9,7 +9,7 @@ void addMethodeInMap(string str, string &RequestStr, std::map<string,string> &Re
 	if(begin != string::npos)
 	{
 		begin += str.size();
-		end = RequestStr.find_first_of("\r\n", begin);
+		end = RequestStr.find_first_of("\r\n;\"", begin);
 		cout << str << " " << end << endl;
 		str.pop_back();
 		str.pop_back();

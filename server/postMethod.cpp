@@ -56,7 +56,16 @@ int postMethode(std::map<string, string> &RequestMap, serverConfig &serv)
         std::cout << "Content-Length " << std::endl;
         return (413);
     }
-    std::ofstream upload_html(file_to_upload);
+	//creating new file
+    std::ofstream upload_html(file_to_upload, std::ios::binary);
+	//writing in new file
+	// int i = 0;
+	// while (RequestMap["Body"][i])
+	// {
+	// 	upload_html.write(&RequestMap["Body"][i], 1);
+	// 	i++;
+	// }
+	std::cout << "BODY??: " << RequestMap["Body"] << std::endl;
     upload_html.write(RequestMap["Body"].c_str(), length);
 	//TODO change response with the right values
 	string text = "HTTP/1.1 ";
